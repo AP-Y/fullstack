@@ -8,7 +8,12 @@ const Stat = ({name, num}) => <p>{name} {num}</p>
 
 const Statistics = ({good, neutral, bad}) => {
   const total = good + neutral + bad
-  const noReviews = total === 0
+
+  if (total === 0) {
+    return (
+      <p>No feedback given</p>
+    )
+  }
 
   return (
     <div>
@@ -16,8 +21,8 @@ const Statistics = ({good, neutral, bad}) => {
       <Stat name="neutral" num={neutral} />
       <Stat name="bad" num={bad} />
       <Stat name="all" num={total} />
-      <Stat name="average" num={noReviews ? 0 : (good - bad)/total} />
-      <Stat name="positive" num={(noReviews ? 0 : (good/total*100).toString()) + "%"} />
+      <Stat name="average" num={(good - bad)/total} />
+      <Stat name="positive" num={(good/total*100).toString() + "%"} />
     </div>
   )
 }
