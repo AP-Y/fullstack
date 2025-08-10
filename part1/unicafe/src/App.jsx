@@ -4,8 +4,6 @@ const Header = ({text}) => <h1>{text}</h1>
 
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
-const StatisticLine = ({name, num}) => <p>{name} {num}</p>
-
 const Statistics = ({good, neutral, bad}) => {
   const total = good + neutral + bad
 
@@ -16,14 +14,32 @@ const Statistics = ({good, neutral, bad}) => {
   }
 
   return (
-    <div>
-      <StatisticLine name="good" num={good} />
-      <StatisticLine name="neutral" num={neutral} />
-      <StatisticLine name="bad" num={bad} />
-      <StatisticLine name="all" num={total} />
-      <StatisticLine name="average" num={(good - bad)/total} />
-      <StatisticLine name="positive" num={(good/total*100).toString() + "%"} />
-    </div>
+    <table><tbody>
+      <tr>
+        <td>good</td>
+        <td>{good}</td>
+      </tr>
+      <tr>
+        <td>neutral</td>
+        <td>{neutral}</td>
+      </tr>
+      <tr>
+        <td>bad</td>
+        <td>{bad}</td>
+      </tr>
+      <tr>
+        <td>all</td>
+        <td>{total}</td>
+      </tr>
+      <tr>
+        <td>average</td>
+        <td>{(good - bad)/total}</td>
+      </tr>
+      <tr>
+        <td>positive</td>
+        <td>{(good/total*100).toString() + "%"}</td>
+      </tr>
+    </tbody></table>
   )
 }
 
