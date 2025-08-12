@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
 import noteService from './services/notes'
+import Notification from './components/Notification'
 import Note from './components/Note'
+import Footer from './components/Footer'
 
 const App = () => {
-  const [notes, setNotes] = useState([])
+  const [notes, setNotes] = useState(null)
   const [newNote, setNewNote] = useState("N/A")
   const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState("")
 
   useEffect(() => {
     noteService
@@ -14,6 +17,10 @@ const App = () => {
         setNotes(initialNotes)
       })
   }, [])
+
+  if (!notes) {
+    return null
+  }
 
   const toggleImportanceOf = (id) => {
     const note = notes.find(n => n.id === id)
@@ -24,7 +31,10 @@ const App = () => {
       .then(returnedNote => (
         setNotes(notes.map(note => note.id === id? returnedNote : note))))
       .catch(_error => {
-        alert(`the note ${note.content} doesn't exist on the server`)
+        setErrorMessage(`The note "${note.content}" doesn't exist on the server`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
         setNotes(notes.filter(n => n.id !== id))
       })
   }
@@ -51,6 +61,7 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <button onClick={() => setShowAll(!showAll)}>
         show {showAll ? 'important' : 'all'}
       </button>
@@ -66,6 +77,7 @@ const App = () => {
         <input value={newNote} onChange={handleNoteChange}/>
         <button type="Submit">save</button>
       </form>
+      <Footer />
     </div>
   )
 }
