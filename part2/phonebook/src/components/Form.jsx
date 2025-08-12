@@ -1,6 +1,7 @@
 import phonebookService from '../services/phonebook'
 
-const Form = ({persons, setPersons, newPerson, setNewPerson, displayMessage, emptyPerson}) => {
+const Form = ({persons, setPersons, newPerson, setNewPerson,
+               displayMessage, emptyPerson, refreshAllPersons}) => {
   const addPerson = (event) => {
     event.preventDefault()
     const sameName = persons.filter(per => per.name === newPerson.name)
@@ -13,9 +14,11 @@ const Form = ({persons, setPersons, newPerson, setNewPerson, displayMessage, emp
           setPersons(persons.concat(returnedPerson))
           displayMessage(`Added ${returnedPerson.name}`)
         })
+
     } else if (sameName[0].number === newPerson.number) {
       // Same name, same number
       displayMessage(`${newPerson.name} at ${newPerson.number} is already added to phonebook`)
+
     } else {
       // Same name, new number
       if (window.confirm(`${newPerson.name} is already added to the phonebook, replace the old number with a new one?`)) {
@@ -26,8 +29,13 @@ const Form = ({persons, setPersons, newPerson, setNewPerson, displayMessage, emp
             setPersons(persons.map(per => per.id === updateId ? returnedPerson : per))
             displayMessage(`Changed ${returnedPerson.name}'s number`)
           })
+          .catch(_error => {
+            displayMessage(`Error: information of ${newPerson.name} has already been removed from server`)
+            refreshAllPersons()
+          })
       }
     }
+
     setNewPerson(emptyPerson)
   }
 

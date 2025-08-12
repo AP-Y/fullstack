@@ -1,9 +1,13 @@
-.error {
-  color: green;
+.message {
   font-size: 20px;
+  color: green;
   background-color: lightgray;
-  border: 3px solid green ;
+  border: 3px solid;
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
+}
+
+.message.error {
+  color: red
 }

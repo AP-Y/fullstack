@@ -3,7 +3,12 @@ const Notification = ({message}) => {
     return null
   }
 
-  return <div className="error">{message}</div>
+  const isError = message.toLowerCase().includes("error")
+  return (
+    <div className={`message ${isError ? "error" : ""}`}>
+      {message}
+    </div>
+  )
 }
 
 export default Notification
