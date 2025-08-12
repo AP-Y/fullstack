@@ -1,13 +1,28 @@
+import phonebookService from '../services/phonebook'
+
 const Form = ({persons, setPersons, newPerson, setNewPerson, emptyPerson}) => {
   const addPerson = (event) => {
     event.preventDefault()
-    const uniquePerson = persons.every(
-      person => person.name !== newPerson.name || person.number !== newPerson.number)
-    if (uniquePerson) {
-      newPerson.id = persons.length + 1
-      setPersons(persons.concat(newPerson))
-    } else {
+    const sameName = persons.filter(per => per.name === newPerson.name)
+
+    if (sameName.length === 0) {
+      // New name
+      phonebookService
+        .create(newPerson)
+        .then(returnedPerson => setPersons(persons.concat(returnedPerson)))
+    } else if (sameName[0].number === newPerson.number) {
+      // Same name, same number
       alert(`${newPerson.name} at ${newPerson.number} is already added to phonebook`)
+    } else {
+      // Same name, new number
+      if (window.confirm(`${newPerson.name} is already added to the phonebook, replace the old number with a new one?`)) {
+        const updateId = sameName[0].id
+        phonebookService
+          .update(updateId, {...newPerson, id: updateId})
+          .then(returnedPerson => setPersons(
+            persons.map(per => per.id === updateId ? returnedPerson : per)
+          ))
+      }
     }
     setNewPerson(emptyPerson)
   }

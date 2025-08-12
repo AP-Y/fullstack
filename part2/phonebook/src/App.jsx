@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import phonebookService from './services/phonebook'
 import Header from './components/Header'
 import Filter from './components/Filter'
 import Form from './components/Form'
@@ -12,12 +12,12 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+    phonebookService
+      .getAll()
+      .then(initialData => {setPersons(initialData)})
   }, [])
+
+  const personsToDisplay = persons.filter(person => person.name.toLowerCase().includes(filter))
 
   return (
     <div>
@@ -25,9 +25,10 @@ const App = () => {
       <Filter filter={filter} setFilter={setFilter}/>
       <Header text="add a new" />
       <Form persons={persons} setPersons={setPersons}
-            newPerson={newPerson} setNewPerson={setNewPerson} emptyPerson={emptyPerson} />
+            newPerson={newPerson} setNewPerson={setNewPerson}
+            emptyPerson={emptyPerson} />
       <Header text="Numbers" />
-      <Display persons={persons.filter(person => person.name.toLowerCase().includes(filter))} />
+      <Display persons={personsToDisplay} setPersons={setPersons} />
     </div>
   )
 }
