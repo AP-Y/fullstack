@@ -1,6 +1,6 @@
 import phonebookService from '../services/phonebook'
 
-const Form = ({persons, setPersons, newPerson, setNewPerson, emptyPerson}) => {
+const Form = ({persons, setPersons, newPerson, setNewPerson, displayMessage, emptyPerson}) => {
   const addPerson = (event) => {
     event.preventDefault()
     const sameName = persons.filter(per => per.name === newPerson.name)
@@ -9,19 +9,23 @@ const Form = ({persons, setPersons, newPerson, setNewPerson, emptyPerson}) => {
       // New name
       phonebookService
         .create(newPerson)
-        .then(returnedPerson => setPersons(persons.concat(returnedPerson)))
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          displayMessage(`Added ${returnedPerson.name}`)
+        })
     } else if (sameName[0].number === newPerson.number) {
       // Same name, same number
-      alert(`${newPerson.name} at ${newPerson.number} is already added to phonebook`)
+      displayMessage(`${newPerson.name} at ${newPerson.number} is already added to phonebook`)
     } else {
       // Same name, new number
       if (window.confirm(`${newPerson.name} is already added to the phonebook, replace the old number with a new one?`)) {
         const updateId = sameName[0].id
         phonebookService
           .update(updateId, {...newPerson, id: updateId})
-          .then(returnedPerson => setPersons(
-            persons.map(per => per.id === updateId ? returnedPerson : per)
-          ))
+          .then(returnedPerson => {
+            setPersons(persons.map(per => per.id === updateId ? returnedPerson : per))
+            displayMessage(`Changed ${returnedPerson.name}'s number`)
+          })
       }
     }
     setNewPerson(emptyPerson)
