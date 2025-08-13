@@ -29,9 +29,10 @@ const Form = ({persons, setPersons, newPerson, setNewPerson,
             setPersons(persons.map(per => per.id === updateId ? returnedPerson : per))
             displayMessage(`Changed ${returnedPerson.name}'s number`)
           })
-          .catch(_error => {
+          .catch(error => {
             displayMessage(`Error: information of ${newPerson.name} has already been removed from server`)
             refreshAllPersons()
+            return error
           })
       }
     }
