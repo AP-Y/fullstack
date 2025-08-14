@@ -1,15 +1,18 @@
-const morgan = require('morgan')
 const express = require('express')
 const app = express()
-
 app.use(express.json())
+
+const cors = require('cors')
+app.use(cors())
+
+const morgan = require('morgan')
 
 morgan.token('body', req => {
   return JSON.stringify(req.body)
 })
 const tiny = ":method :url :status :res[content-length] - :response-time ms"
 
-app.use(morgan(" :body"))
+app.use(morgan(`${tiny} :body`))
 
 let persons = [
     {
@@ -94,7 +97,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.json(204).end()
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
 })

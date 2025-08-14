@@ -6,9 +6,10 @@ const Display = ({persons, setPersons, displayMessage}) => {
     if (window.confirm(`Delete ${person.name}?`)) {
       phonebookService
         .remove(person.id)
-        .then(deletedPerson => {
+        .then(httpCode => {
           setPersons(persons.filter(p => p.id !== person.id))
-          displayMessage(`${deletedPerson.name} has been removed from the phonebook`)
+          displayMessage(`${person.name} has been removed from the phonebook`)
+          return httpCode
         })
     }
   }
