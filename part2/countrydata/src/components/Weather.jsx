@@ -7,7 +7,7 @@ const Weather = ({country}) => {
   useEffect(() => {
     const [lat, lon] = country.capitalInfo.latlng
     countryData
-      .getWeather(lat, lon, "9615b66d22cfb3d0781274587cadfae4")
+      .getWeather(lat, lon, import.meta.env.VITE_OPENWEATHER_API)
       .then(w => {
         console.log(w)
         setWeather(w)
