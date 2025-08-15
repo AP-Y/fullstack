@@ -17,10 +17,12 @@ app.use(requestLogger)
 
 const Note = require('./models/note')
 
-app.get('/api/notes', (_request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
-  })
+app.get('/api/notes', (_request, response, next) => {
+  Note.find({})
+    .then(notes => {
+      response.json(notes)
+    })
+    .catch(error => next(error))
 })
 
 app.get('/api/notes/:id', (request, response, next) => {
@@ -43,7 +45,7 @@ app.delete('/api/notes/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
   if (!body.content) {
     return response.status(400).json({
@@ -56,9 +58,11 @@ app.post('/api/notes', (request, response) => {
     important: body.important || false
   })
 
-  note.save().then(savedNote => {
-    response.json(savedNote)
-  })
+  note.save()
+    .then(savedNote => {
+      response.json(savedNote)
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/notes/:id', (request, response, next) => {
@@ -93,6 +97,8 @@ const errorHandler = (error, _request, response, next) => {
 
   if (error.name == 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: erro.message })
   }
 
   next(error)
