@@ -2,13 +2,11 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
-// mongodb+srv://aarnapy:vEdmbvfsuk0G86Zs@cluster0.wjzgkvg.mongodb.net/noteApp?retryWrites=true&w=majority&appName=Cluster0
 const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
 mongoose.connect(url)
-
-  .then(result => {
+  .then(_result => {
     console.log('connected to MongoDB')
   })
   .catch(error => {
@@ -21,7 +19,7 @@ const noteSchema = new mongoose.Schema({
 })
 
 noteSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
+  transform: (_document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v

@@ -1,7 +1,7 @@
-POST https://notes-51ye.onrender.com/api/notes
+POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "content": "Hello there!",
+  "content": "This is a new note sent by VS Code REST client",
   "extra": "What's this??"
 }
